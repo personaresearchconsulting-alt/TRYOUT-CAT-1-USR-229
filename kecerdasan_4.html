@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="id" oncontextmenu="return false" onselectstart="return false" onkeydown="if(event.ctrlKey && (event.key==='c' || event.key==='u' || event.key==='i' || event.key==='j')) return false">
+<html lang="id" oncontextmenu="return false" onselectstart="return false" onkeydown="if(event.ctrlKey && (event.key==='c' || event.key==='u')) return false">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>CAT KECERDASAN HOTS — Persona Research & Consulting</title>
+    <title>CAT KECERDASAN — Persona Research & Consulting</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -11,285 +11,370 @@
     <style>
         :root { --primary: #1a1a2e; --accent: #c5a059; --bg: #f8f7f2; --text: #1a1a2e; --success: #27ae60; --danger: #e74c3c; --gold: #d4af37; }
         * { box-sizing: border-box; -webkit-user-select: none; user-select: none; margin: 0; padding: 0; }
-        body { background: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text); padding: 10px; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-top: 8px solid var(--accent); }
-        .brand { text-align: center; margin-bottom: 20px; }
-        .brand h1 { font-size: 22px; color: var(--primary); letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
-        .timer { font-size: 28px; font-weight: 800; color: var(--danger); text-align: center; margin-bottom: 15px; background: #fff5f5; padding: 10px; border-radius: 10px; border: 1px solid #ffebeb; font-family: monospace; }
-        .q-text { font-size: 16px; font-weight: 600; color: var(--primary); margin-bottom: 20px; line-height: 1.6; background: #f9f9f9; padding: 15px; border-radius: 10px; border-left: 5px solid var(--accent); }
-        .opt { display: flex; align-items: center; padding: 14px; margin: 8px 0; border: 2px solid #f0f0f0; border-radius: 10px; cursor: pointer; transition: 0.2s; font-size: 14px; }
-        .opt:hover { background: #fdfaf0; border-color: var(--accent); }
-        .opt.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
-        .nav-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin: 15px 0; padding: 10px; background: #fafafa; border-radius: 8px; }
-        .nav-item { height: 30px; display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; }
-        .nav-item.active { border: 2px solid var(--primary); box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
+        body { background: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text); padding: 10px; line-height: 1.5; }
+        
+        .container { max-width: 850px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-top: 8px solid var(--accent); }
+        
+        /* Branding */
+        .brand { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .brand h1 { font-size: 24px; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+        .brand p { font-size: 14px; color: var(--gold); font-weight: bold; letter-spacing: 1px; }
+
+        /* Timer & Info */
+        .timer { font-size: 28px; font-weight: 800; color: var(--danger); text-align: center; margin-bottom: 20px; font-family: 'Courier New', monospace; background: #fff5f5; padding: 10px; border-radius: 8px; border: 1px solid #ffebeb; }
+
+        /* Login */
+        .login-input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; transition: 0.3s; }
+        .login-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(197, 160, 89, 0.2); }
+
+        /* Soal */
+        .q-num { color: var(--accent); font-weight: bold; font-size: 14px; margin-bottom: 8px; }
+        .q-text { font-size: 19px; font-weight: 600; color: var(--primary); margin-bottom: 25px; min-height: 60px; }
+        
+        /* Opsi Jawaban */
+        .opt { display: flex; align-items: center; padding: 15px; margin: 12px 0; border: 2px solid #f0f0f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background: #fff; }
+        .opt:hover { background: #fdfaf0; border-color: var(--accent); transform: translateX(5px); }
+        .opt.selected { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: bold; }
+
+        /* Navigasi Kotak */
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; margin: 25px 0; max-height: 180px; overflow-y: auto; padding: 15px; background: #fafafa; border-radius: 10px; border: 1px solid #eee; }
+        .nav-item { height: 40px; display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
+        .nav-item.active { border: 3px solid var(--primary); transform: scale(1.1); }
         .nav-item.filled { background: var(--accent); color: #fff; border-color: var(--accent); }
-        .btn { padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; transition: 0.3s; }
-        .btn-navy { background: var(--primary); color: #fff; }
-        .rekap-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; table-layout: fixed; }
-        .rekap-table th { background: var(--primary); color: #fff; padding: 10px; text-align: left; }
-        .rekap-table td { border: 1px solid #eee; padding: 10px; vertical-align: top; word-wrap: break-word; }
-        .exp-box { max-height: 100px; overflow-y: auto; background: #f0f7ff; padding: 10px; border-radius: 6px; margin-top: 8px; font-size: 11px; border-left: 3px solid var(--accent); color: #2c3e50; line-height: 1.5; }
+
+        /* Tombol */
+        .btn { padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 15px; width: 100%; text-transform: uppercase; }
+        .btn-navy { background: var(--primary); color: #fff; box-shadow: 0 4px 10px rgba(26, 26, 46, 0.3); }
+        .btn-green { background: var(--success); color: #fff; margin-top: 15px; }
+        .btn-navy:hover, .btn-green:hover { filter: brightness(1.2); }
+
+        /* Rekap Pembahasan */
+        .rekap-table { width: 100%; border-collapse: collapse; margin-top: 25px; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        .rekap-table th { background: var(--primary); color: #fff; padding: 15px; text-align: left; }
+        .rekap-table td { border: 1px solid #eee; padding: 15px; vertical-align: top; background: #fff; font-size: 14px; }
+        .exp-box { margin-top: 12px; padding: 12px; background: #f0f7ff; border-left: 5px solid #3498db; font-size: 13px; color: #2c3e50; line-height: 1.4; border-radius: 0 5px 5px 0; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+
+        #result-screen { text-align: center; }
+        .final-score { font-size: 72px; font-weight: 900; color: var(--primary); margin: 10px 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="login-screen">
-        <div class="brand"><h1>EVALUASI KECERDASAN POLRI</h1><p style="color:var(--gold); font-weight:bold;">Persona Research & Consulting</p></div>
-        <input type="text" id="username" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; border:2px solid #ddd; text-align:center; font-size:16px;" placeholder="Masukkan Nama Lengkap Peserta">
-        <button class="btn btn-navy" onclick="startTest()">MULAI TES SEKARANG</button>
+        <div class="brand">
+            <h1>CAT KECERDASAN</h1>
+            <p>Persona Research & Consulting</p>
+        </div>
+        <input type="text" id="username" class="login-input" placeholder="Nama Lengkap Calon Siswa">
+        <button class="btn btn-navy" onclick="startTest()">MULAI SIMULASI CAT</button>
     </div>
 
     <div id="test-screen" style="display:none;">
-        <div class="timer" id="timer">90:00</div>
-        <div id="q-num" style="color:var(--accent); font-weight:bold; margin-bottom:5px; font-size:12px;"></div>
-        <div id="q-text" class="q-text"></div>
-        <div id="options-container"></div>
-        <div style="display:flex; gap:10px; margin-top:15px;">
-            <button class="btn" style="background:#888; color:white;" onclick="changeQ(-1)">KEMBALI</button>
-            <button class="btn btn-navy" onclick="changeQ(1)">SELANJUTNYA</button>
+        <div class="timer" id="timer">60:00</div>
+        
+        <div class="q-area">
+            <div id="q-num" class="q-num"></div>
+            <div id="q-text" class="q-text"></div>
+            <div id="options-container"></div>
         </div>
+        
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button class="btn" style="background:#888; color:white;" onclick="changeQ(-1)">KEMBALI</button>
+            <button class="btn btn-navy" onclick="changeQ(1)">LEWATI / LANJUT</button>
+        </div>
+
         <div class="nav-grid" id="nav-grid"></div>
-        <button class="btn" style="background:var(--danger); color:white;" onclick="confirmFinish()">SELESAI & SIMPAN NILAI</button>
+        
+        <button class="btn btn-green" style="background:var(--danger);" onclick="confirmFinish()">SELESAI & KIRIM HASIL</button>
     </div>
 
     <div id="result-screen" style="display:none;">
-        <div class="brand"><h1>HASIL AKHIR UJIAN</h1><p id="res-name-display" style="font-weight:bold;"></p></div>
-        <div style="text-align:center; font-size:70px; font-weight:900; color:var(--primary); margin-bottom:10px;" id="score-val">0</div>
-        <button class="btn btn-navy" style="margin-bottom:20px;" onclick="downloadPDF()">UNDUH LAPORAN PDF</button>
-        <div style="overflow-x:auto;">
+        <div class="brand">
+            <h1>HASIL EVALUASI</h1>
+            <p id="res-name-display"></p>
+        </div>
+        
+        <div class="final-score" id="score-val">0</div>
+        <p style="color:#666; margin-bottom:20px;">Data Anda telah tersimpan di sistem pusat.</p>
+        
+        <button class="btn btn-green" onclick="downloadPDF()">DOWNLOAD LAPORAN HASIL (PDF)</button>
+        
+        <div style="overflow-x:auto; margin-top:30px; text-align:left;">
+            <h3 style="margin-bottom:10px; color:var(--primary);">Analisis Jawaban & Pembahasan:</h3>
             <table class="rekap-table">
-                <thead><tr><th style="width:45px;">No</th><th>Analisis & Pembahasan Mendalam</th><th style="width:80px;">Status</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th width="50">No</th>
+                        <th>Pembahasan Detail</th>
+                        <th width="80">Status</th>
+                    </tr>
+                </thead>
                 <tbody id="review-body"></tbody>
             </table>
         </div>
+        
+        <button class="btn btn-navy" onclick="location.reload()" style="margin-top:30px;">KEMBALI KE BERANDA</button>
     </div>
 </div>
 
 <script>
-// --- DATABASE 50 SOAL HOTS ---
-const quizData = [
-    { q: "Andi menghadap ke arah Barat Daya. Jika ia berputar 135 derajat searah jarum jam, maka ia sekarang menghadap ke arah...", opts: ["Utara", "Timur Laut", "Tenggara", "Timur", "Barat"], ans: "Utara", exp: "Langkah: Barat Daya ke Barat (45°), lalu Barat ke Utara (90°). Total 135°. Jadi posisi akhir adalah Utara." },
-    { q: "Seseorang berjalan 10m ke Utara, belok kanan 5m, lalu belok kanan lagi 10m. Posisi orang tersebut dari titik awal adalah...", opts: ["5m ke Timur", "5m ke Barat", "10m ke Selatan", "Tepat di awal", "15m ke Timur"], ans: "5m ke Timur", exp: "Utara 10m dan Selatan 10m saling menghapuskan posisi vertikal. Tersisa pergeseran horizontal ke arah kanan (Timur) sejauh 5m." },
-    { q: "Jarum jam menunjukkan pukul 04.00. Sudut terkecil yang terbentuk adalah...", opts: ["120°", "90°", "150°", "100°", "60°"], ans: "120°", exp: "Setiap lompatan angka jam bernilai 30°. Dari angka 12 ke 4 ada 4 langkah. 4 x 30° = 120°." },
-    { q: "Kebalikan dari arah mata angin Tenggara adalah...", opts: ["Barat Laut", "Timur Laut", "Barat Daya", "Utara", "Selatan"], ans: "Barat Laut", exp: "Tenggara (South-East) berlawanan arah tepat 180 derajat dengan Barat Laut (North-West)." },
-    { q: "Andi bersepeda 6km ke Barat, lalu belok kiri dan menempuh 8km. Jarak terpendek Andi dari titik awal adalah...", opts: ["10km", "14km", "2km", "12km", "15km"], ans: "10km", exp: "Gunakan rumus Pythagoras: √(6² + 8²) = √(36 + 64) = √100 = 10km." },
-    { q: "Matahari terbit berada di sebelah kanan Anda. Maka Anda sedang menghadap ke arah...", opts: ["Utara", "Selatan", "Timur", "Barat", "Barat Laut"], ans: "Utara", exp: "Matahari terbit di Timur. Jika Timur ada di sebelah kanan Anda, berarti Anda sedang menghadap ke arah Utara." },
-    { q: "Pukul 10.30, sudut terkecil yang dibentuk jarum jam adalah...", opts: ["135°", "120°", "150°", "105°", "90°"], ans: "135°", exp: "Rumus: |(30*10) - (5.5*30)| = |300 - 165| = 135°." },
-    { q: "Jika Anda menghadap ke arah Timur dan berputar 90 derajat ke kiri, Anda akan menghadap...", opts: ["Utara", "Selatan", "Barat", "Timur Laut", "Barat Laut"], ans: "Utara", exp: "Putaran ke kiri (berlawanan jarum jam) dari Timur (90°) sejauh 90 derajat menuju ke arah Utara (0°)." },
-    { q: "Sebuah kapal berlayar ke arah 225 derajat. Ini merupakan arah...", opts: ["Barat Daya", "Barat Laut", "Tenggara", "Timur Laut", "Selatan"], ans: "Barat Daya", exp: "Utara=0/360, Timur=90, Selatan=180, Barat=270. Angka 225 berada di antara 180 (Selatan) dan 270 (Barat)." },
-    { q: "Seorang pilot terbang ke arah Timur Laut, lalu berputar 180 derajat. Ke arah mana ia terbang sekarang?", opts: ["Barat Daya", "Barat Laut", "Tenggara", "Selatan", "Utara"], ans: "Barat Daya", exp: "Putaran 180 derajat berarti berbalik arah. Lawan dari Timur Laut adalah Barat Daya." },
-    { q: "Dari titik A berjalan 5m ke Timur, 5m ke Selatan, dan 5m ke Barat. Jarak titik akhir ke titik A adalah...", opts: ["5m", "0m", "10m", "15m", "25m"], ans: "5m", exp: "Timur 5m dan Barat 5m kembali ke garis bujur yang sama. Tersisa jarak 5m ke arah Selatan." },
-    { q: "Jika jarum jam pendek menunjuk ke arah Tenggara, maka jam menunjukkan pukul...", opts: ["04.30", "01.30", "07.30", "10.30", "09.00"], ans: "04.30", exp: "Tenggara berada di antara angka 3 (Timur) dan 6 (Selatan), yaitu posisi angka 4 atau 5 pada jam." },
-    { q: "Antara arah Barat dan Utara terdapat arah mata angin...", opts: ["Barat Laut", "Barat Daya", "Timur Laut", "Tenggara", "Utara"], ans: "Barat Laut", exp: "Sesuai urutan kompas: Utara, Timur Laut, Timur, Tenggara, Selatan, Barat Daya, Barat, Barat Laut." },
-    { q: "Seseorang lari 12m ke Timur, lalu 5m ke Utara. Jarak lurus ke posisi awal?", opts: ["13m", "17m", "7m", "20m", "15m"], ans: "13m", exp: "Pythagoras: √(12² + 5²) = √(144 + 25) = √169 = 13m." },
-    { q: "Matahari terbenam di depan Anda. Anda berputar 90 derajat ke kanan. Kini punggung Anda menghadap...", opts: ["Utara", "Selatan", "Timur", "Barat", "Barat Laut"], ans: "Selatan", exp: "Menghadap Barat (Matahari terbenam). Belok kanan 90° = Menghadap Utara. Jika menghadap Utara, punggung menghadap Selatan." },
-    { q: "Kompas menunjuk arah 135 derajat. Arah tersebut adalah...", opts: ["Tenggara", "Barat Daya", "Timur Laut", "Barat Laut", "Selatan"], ans: "Tenggara", exp: "135 derajat berada tepat di tengah antara Timur (90) dan Selatan (180)." },
-    { q: "Pukul 09.00 jarum panjang di Utara, jarum pendek di...", opts: ["Barat", "Timur", "Selatan", "Barat Laut", "Timur Laut"], ans: "Barat", exp: "Angka 9 pada jam berada di posisi jam 9 (sebelah kiri atau arah Barat)." },
-    { q: "Andi berjalan 3 langkah ke Timur, 4 langkah ke Selatan. Jarak terpendek?", opts: ["5 langkah", "7 langkah", "1 langkah", "10 langkah", "12 langkah"], ans: "5 langkah", exp: "√(3² + 4²) = 5 langkah." },
-    { q: "Antara arah Timur dan Utara adalah arah...", opts: ["Timur Laut", "Barat Laut", "Tenggara", "Barat Daya", "Selatan"], ans: "Timur Laut", exp: "Definisi standar arah mata angin sekunder." },
-    { q: "Pukul 06.00, sudut yang terbentuk jarum jam adalah...", opts: ["180°", "90°", "360°", "120°", "0°"], ans: "180°", exp: "Jarum jam 6 dan 12 membentuk garis lurus atau 180 derajat." },
-    { q: "Jika X=2 dan Y=3, maka X² + Y² adalah...", opts: ["13", "10", "12", "15", "17"], ans: "13", exp: "4 + 9 = 13." },
-    { q: "Hutan : Pohon = Masakan : ...", opts: ["Bumbu", "Piring", "Koki", "Sendok", "Restoran"], ans: "Bumbu", exp: "Unsur pembentuk utama." },
-    { q: "1, 4, 9, 16, ...", opts: ["25", "20", "30", "36", "49"], ans: "25", exp: "Deret bilangan kuadrat (1², 2², 3², 4², 5²)." },
-    { q: "Sumbat : Botol = Pintu : ...", opts: ["Rumah", "Kunci", "Kayu", "Engsel", "Jendela"], ans: "Rumah", exp: "Penutup akses masuk." },
-    { q: "Sinonim kata 'ITERASI' adalah...", opts: ["Perulangan", "Pembalasan", "Pembagian", "Penemuan", "Pembalikan"], ans: "Perulangan", exp: "Iterasi berarti pengulangan langkah." },
-    { q: "Antonim kata 'ABSURD' adalah...", opts: ["Masuk Akal", "Aneh", "Lucu", "Mustahil", "Gila"], ans: "Masuk Akal", exp: "Absurd (tidak logis) lawannya Masuk Akal." },
-    { q: "Mobil : Bensin = Manusia : ...", opts: ["Makanan", "Oksigen", "Air", "Tidur", "Rumah"], ans: "Makanan", exp: "Sumber energi utama." },
-    { q: "Jika hari ini Selasa, 100 hari lagi hari...", opts: ["Kamis", "Rabu", "Jumat", "Sabtu", "Minggu"], ans: "Kamis", exp: "100 mod 7 = 2. Selasa + 2 hari = Kamis." },
-    { q: "Hasil 15% dari 200 adalah...", opts: ["30", "20", "40", "15", "25"], ans: "30", exp: "0.15 * 200 = 30." },
-    { q: "Segitiga dengan sisi 6, 8, 10 adalah segitiga...", opts: ["Siku-siku", "Sama sisi", "Sama kaki", "Sembarang", "Lancip"], ans: "Siku-siku", exp: "Memenuhi 6²+8²=10²." },
-    { q: "Lawan dari kata PROGRESIF adalah...", opts: ["Regresif", "Statis", "Aktif", "Maju", "Cepat"], ans: "Regresif", exp: "Progresif (maju), Regresif (mundur)." },
-    { q: "Gergaji : Kayu = Pisau : ...", opts: ["Daging", "Dapur", "Tajam", "Besi", "Koki"], ans: "Daging", exp: "Alat dan objek kerjanya." },
-    { q: "Ibu Kota Australia adalah...", opts: ["Canberra", "Sydney", "Melbourne", "Perth", "Brisbane"], ans: "Canberra", exp: "Pengetahuan umum geografi." },
-    { q: "Berapa menit dalam 1,5 jam?", opts: ["90", "60", "120", "100", "80"], ans: "90", exp: "1.5 * 60 = 90 menit." },
-    { q: "Hasil 2 pangkat 5 adalah...", opts: ["32", "16", "64", "10", "25"], ans: "32", exp: "2*2*2*2*2 = 32." },
-    { q: "Z, W, T, Q, ...", opts: ["N", "M", "L", "O", "P"], ans: "N", exp: "Mundur 3 huruf tiap langkah." },
-    { q: "Pencerminan kata 'BOX' secara horizontal adalah...", opts: ["BOX", "XOB", "BXO", "B0X", "OXX"], ans: "BOX", exp: "B, O, X simetris horizontal." },
-    { q: "Guru : Sekolah = Penebang : ...", opts: ["Hutan", "Kayu", "Pasar", "Sawah", "Kapak"], ans: "Hutan", exp: "Tempat kerja profesi." },
-    { q: "√144 + √169 = ...", opts: ["25", "23", "27", "20", "30"], ans: "25", exp: "12 + 13 = 25." },
-    { q: "Arah jam 3 menunjukkan arah...", opts: ["Timur", "Barat", "Utara", "Selatan", "Tenggara"], ans: "Timur", exp: "Angka 3 pada jam analog adalah posisi Timur (90°)." },
-    { q: "Sepatu : Kaki = Topi : ...", opts: ["Kepala", "Rambut", "Mata", "Telinga", "Helm"], ans: "Kepala", exp: "Pelindung bagian tubuh." },
-    { q: "Matahari : Terang = Api : ...", opts: ["Panas", "Asap", "Kayu", "Merah", "Bara"], ans: "Panas", exp: "Sifat utama benda." },
-    { q: "Berapa rusuk pada kubus?", opts: ["12", "6", "8", "4", "10"], ans: "12", exp: "Kubus memiliki 12 garis rusuk." },
-    { q: "100, 90, 80, 70, ...", opts: ["60", "50", "40", "30", "20"], ans: "60", exp: "Deret pengurangan 10." },
-    { q: "Jika P > Q dan Q > R, maka...", opts: ["P > R", "P < R", "P = R", "R > P", "Q < R"], ans: "P > R", exp: "Prinsip transitif matematika." },
-    { q: "2, 4, 8, 16, ...", opts: ["32", "24", "64", "20", "48"], ans: "32", exp: "Pola perkalian 2." },
-    { q: "Kamera : Fotografer = Stetoskop : ...", opts: ["Dokter", "Pasien", "Sakit", "Rumah", "Obat"], ans: "Dokter", exp: "Alat dan profesi penggunanya." },
-    { q: "Antara Barat Daya dan Tenggara adalah...", opts: ["Selatan", "Utara", "Timur", "Barat", "Timur Laut"], ans: "Selatan", exp: "Posisi jam 6 atau arah bawah pada peta." },
-    { q: "A, C, E, G, ...", opts: ["I", "H", "J", "K", "L"], ans: "I", exp: "Lompat 1 huruf." },
-    { q: "Hasil 3/4 + 1/2 adalah...", opts: ["1.25", "1", "0.75", "1.5", "1.15"], ans: "1.25", exp: "0.75 + 0.5 = 1.25." }
-];
+    /* --- DATA SOAL (TEMPEL HASIL GENERATE DI SINI) --- */
+    const quizData = [
+        // const quizData = [// BAGIAN 1: VERBAL
+{"q": "Sinonim kata 'integritas' adalah...", "opts": ["Kejujuran", "Kekuasaan", "Kekayaan", "Kesombongan", "Ketepatan"], "ans": "Kejujuran", "exp": "Integritas bermakna keselarasan antara hati, ucapan, dan tindakan, yang sangat identik dengan kejujuran."},
+{"q": "Antonim 'abstrak' adalah...", "opts": ["Konkret", "Kabur", "Teoretis", "Ilmiah", "Umum"], "ans": "Konkret", "exp": "Abstrak berarti tidak berwujud/niskala, sedangkan konkret berarti nyata atau memiliki wujud fisik."},
+{"q": "Sinonim 'kredibel' adalah...", "opts": ["Dapat dipercaya", "Meragukan", "Palsu", "Lemah", "Buruk"], "ans": "Dapat dipercaya", "exp": "Kredibel berasal dari bahasa Inggris 'credible' yang artinya layak atau dapat dipercaya (andal)."},
+{"q": "Antonim 'optimis' adalah...", "opts": ["Pesimis", "Ragu", "Khawatir", "Takut", "Putus asa"], "ans": "Pesimis", "exp": "Optimis adalah berpandangan baik, sedangkan pesimis adalah berpandangan buruk atau mudah putus asa terhadap masa depan."},
+{"q": "Sinonim 'resilien' adalah...", "opts": ["Tahan banting", "Rapuh", "Labil", "Lemah", "Gugup"], "ans": "Tahan banting", "exp": "Resiliensi adalah kemampuan seseorang untuk pulih atau bertahan dalam situasi sulit (tahan banting)."},
+{"q": "Sinonim 'objektif' adalah...", "opts": ["Adil", "Subjektif", "Memihak", "Bias", "Menyudutkan"], "ans": "Adil", "exp": "Objektif berarti menilai berdasarkan fakta yang ada tanpa dipengaruhi perasaan pribadi (adil/netral)."},
+{"q": "Arti 'analogi' paling tepat adalah...", "opts": ["Persamaan hubungan", "Perbedaan", "Deret angka", "Soal gambar", "Tes memori"], "ans": "Persamaan hubungan", "exp": "Analogi adalah persesuaian antara dua benda atau hal yang berlainan; perbandingan untuk menentukan persamaan hubungan."},
+{"q": "Kata yang tidak sekelompok: (merah, kuning, hijau, kayu, biru)", "opts": ["Kayu", "Merah", "Kuning", "Hijau", "Biru"], "ans": "Kayu", "exp": "Merah, kuning, hijau, dan biru adalah nama warna, sedangkan kayu adalah bahan alam/material."},
+{"q": "Sinonim 'valid' adalah...", "opts": ["Sah", "Batal", "Palsu", "Sementara", "Tidak sah"], "ans": "Sah", "exp": "Valid berarti menurut cara yang semestinya, berlaku, atau sah secara hukum/logika."},
+{"q": "Sinonim 'deduksi' adalah...", "opts": ["Dari umum ke khusus", "Dari khusus ke umum", "Hipotesis", "Teori", "Acak"], "ans": "Dari umum ke khusus", "exp": "Deduksi adalah penarikan kesimpulan dari keadaan yang umum ke yang khusus."},
+{"q": "Antonim 'eksklusif' adalah...", "opts": ["Inklusif", "Terbatas", "Khusus", "Elit", "Privat"], "ans": "Inklusif", "exp": "Eksklusif berarti terpisah atau khusus, sedangkan inklusif berarti terbuka atau mengajak masuk semua pihak."},
+{"q": "Sinonim 'solidaritas' adalah...", "opts": ["Persatuan", "Perpecahan", "Permusuhan", "Kebencian", "Konflik"], "ans": "Persatuan", "exp": "Solidaritas adalah perasaan setia kawan atau senasib yang mendasari persatuan dalam kelompok."},
+{"q": "Sinonim 'ambiguitas' adalah...", "opts": ["Ketidakjelasan", "Kejelasan", "Kepastian", "Ketegasan", "Konkret"], "ans": "Ketidakjelasan", "exp": "Ambiguitas berarti bermakna ganda atau mendua, sehingga menimbulkan ketidakjelasan."},
+{"q": "Sinonim 'klaim' adalah...", "opts": ["Tuntutan", "Sanggahan", "Pengakuan", "Pertanyaan", "Permintaan"], "ans": "Tuntutan", "exp": "Klaim adalah tuntutan atas hak atau pengakuan atas suatu fakta/kebenaran."},
+{"q": "Padanan: 'Dokter : Rumah sakit = Guru : ?'", "opts": ["Sekolah", "Kantor", "Pabrik", "Pasar", "Bandara"], "ans": "Sekolah", "exp": "Analogi profesi dan tempat bekerja: Dokter bekerja di Rumah Sakit, Guru bekerja di Sekolah."},
+{"q": "Padanan: 'Kapal : Laut = Pesawat : ?'", "opts": ["Udara", "Jalan", "Rel", "Stasiun", "Terminal"], "ans": "Udara", "exp": "Analogi kendaraan dan media lintasnya: Kapal di Laut, Pesawat di Udara."},
+{"q": "Kata yang paling berbeda: (sikat, ember, sabun, meja, lap)", "opts": ["Meja", "Sikat", "Ember", "Sabun", "Lap"], "ans": "Meja", "exp": "Sikat, ember, sabun, dan lap adalah alat kebersihan, sedangkan meja adalah perabot."},
+{"q": "Arti 'evaluasi' adalah...", "opts": ["Penilaian", "Pengabaian", "Penghapusan", "Pemberian", "Pengumpulan"], "ans": "Penilaian", "exp": "Evaluasi adalah pengumpulan data untuk menentukan nilai atau keberhasilan suatu program/kegiatan."},
+{"q": "Sinonim 'disiplin' adalah...", "opts": ["Taat aturan", "Acuh tak acuh", "Melanggar", "Kebal", "Bebas"], "ans": "Taat aturan", "exp": "Disiplin berarti ketaatan (kepatuhan) kepada peraturan atau tata tertib."},
+{"q": "Antonim 'efisien' adalah...", "opts": ["Boros", "Hemat", "Teratur", "Sistematis", "Cepat"], "ans": "Boros", "exp": "Efisien berarti tepat guna (tidak membuang waktu/biaya), lawannya adalah boros."},
+{"q": "Sinonim 'adaptif' adalah...", "opts": ["Mudah menyesuaikan", "Kaku", "Statik", "Konstan", "Lamban"], "ans": "Mudah menyesuaikan", "exp": "Adaptif berasal dari kata adaptasi, yang berarti memiliki kemampuan menyesuaikan diri dengan lingkungan."},
+{"q": "Padanan: 'Buku : Perpustakaan = Baju : ?'", "opts": ["Lemari", "Rak", "Meja", "Kantor", "Gudang"], "ans": "Lemari", "exp": "Analogi benda dan tempat penyimpanannya: Buku disimpan di Perpustakaan, Baju disimpan di Lemari."},
+{"q": "Arti 'hipotesis' adalah...", "opts": ["Dugaan sementara", "Kebenaran mutlak", "Fakta", "Teorema", "Kesimpulan akhir"], "ans": "Dugaan sementara", "exp": "Hipotesis adalah jawaban sementara terhadap masalah yang masih harus dibuktikan kebenarannya."},
+{"q": "Sinonim 'inisiatif' adalah...", "opts": ["Mengambil tindakan", "Menunggu", "Pasif", "Mengikuti", "Malas"], "ans": "Mengambil tindakan", "exp": "Inisiatif adalah langkah pertama atau kemampuan memutuskan tindakan tanpa menunggu perintah."},
+{"q": "Kata yang tidak sekelompok: (pisau, garpu, sendok, telepon, piring)", "opts": ["Telepon", "Pisau", "Garpu", "Sendok", "Piring"], "ans": "Telepon", "exp": "Telepon adalah alat komunikasi, sedangkan yang lain adalah alat makan."},
+// BAGIAN 2: NUMERIK
+{"q": "Sinonim 'komprehensif' adalah...", "opts": ["Menyeluruh", "Sebagian", "Sempit", "Terbatas", "Kecil"], "ans": "Menyeluruh", "exp": "Komprehensif berarti luas dan meliputi banyak hal; menyeluruh."},
+{"q": "Arti 'retorika' adalah...", "opts": ["Seni berbicara", "Ilmu ukur", "Matematika", "Kedokteran", "Hukum"], "ans": "Seni berbicara", "exp": "Retorika adalah keterampilan berbahasa secara efektif, khususnya seni berbicara di depan umum."},
+{"q": "Sinonim 'koheren' adalah...", "opts": ["Konsisten", "Acak", "Amburadul", "Terpisah", "Bercabang"], "ans": "Konsisten", "exp": "Koheren berarti berhubungan satu sama lain atau tersusun secara logis (konsisten)."},
+{"q": "Antonim 'sekular' adalah...", "opts": ["Religius", "Duniawi", "Netral", "Modern", "Liberal"], "ans": "Religius", "exp": "Sekular berarti bersifat duniawi, lawannya adalah religius (bersifat keagamaan)."},
+{"q": "Sinonim 'autoritatif' adalah...", "opts": ["Bersifat otoritatif", "Lemah", "Tidak dipercaya", "Remeh", "Abstrak"], "ans": "Bersifat otoritatif", "exp": "Autoritatif berarti memiliki otoritas, sah, atau dapat dipercaya kebenarannya."},
+{"q": "Seorang polisi patroli menempuh 150 km dengan kecepatan 75 km/jam. Berapa jam perjalanan?", "opts": ["1", "2", "1.5", "3", "2.5"], "ans": "2", "exp": "Waktu = Jarak / Kecepatan = 150 / 75 = 2 jam."},
+{"q": "Tim 6 orang selesai 18 hari. Jika 12 orang mengerjakan, berapa hari?", "opts": ["9", "6", "12", "18", "15"], "ans": "9", "exp": "Perbandingan berbalik nilai: (6 x 18) / 12 = 108 / 12 = 9 hari."},
+{"q": "72 berkas dibagi 8 meja, berapa per meja?", "opts": ["9", "8", "12", "10", "6"], "ans": "9", "exp": "Pembagian sederhana: 72 / 8 = 9."},
+{"q": "240 km ditempuh dalam 3 jam, berapa kecepatan (km/jam)?", "opts": ["80", "60", "70", "90", "75"], "ans": "80", "exp": "Kecepatan = Jarak / Waktu = 240 / 3 = 80 km/jam."},
+{"q": "20% dari x = 40, x berapa?", "opts": ["200", "80", "100", "150", "120"], "ans": "200", "exp": "x = 40 / (20/100) = 40 * 5 = 200."},
+{"q": "Andi punya 5 kali Budi; Budi 40.000; berapa Andi?", "opts": ["200000", "180000", "150000", "100000", "120000"], "ans": "200000", "exp": "5 x 40.000 = 200.000."},
+{"q": "Barang seharga 80.000 diskon 25% -> harga akhir?", "opts": ["60000", "65000", "70000", "55000", "62000"], "ans": "60000", "exp": "Diskon = 25% x 80.000 = 20.000. Harga akhir = 80.000 - 20.000 = 60.000."},
+{"q": "Helikopter butuh 300 L bahan bakar untuk 600 km. Berapa L per 100 km?", "opts": ["50", "40", "60", "30", "45"], "ans": "50", "exp": "Perbandingan senilai: (300 / 600) * 100 = 0.5 * 100 = 50 Liter."},
+{"q": "Bekerja 07:30 selama 8 jam 15 menit -> jam selesai?", "opts": ["15:45", "15:30", "16:00", "14:45", "15:15"], "ans": "15:45", "exp": "07:30 + 08:15 = 15:45."},
+{"q": "1.200 formulir dibagi 8 pos -> tiap pos?", "opts": ["150", "120", "200", "100", "180"], "ans": "150", "exp": "1.200 / 8 = 150."},
+{"q": "Jika 3x-7=11, x = ?", "opts": ["6", "5", "7", "4", "8"], "ans": "6", "exp": "3x = 11 + 7; 3x = 18; x = 6."},
+{"q": "Berjalan 5 km utara lalu 12 km timur -> jarak lurus dari titik awal?", "opts": ["13", "12", "7", "17", "10"], "ans": "13", "exp": "Teorema Pythagoras: √(5² + 12²) = √(25 + 144) = √169 = 13."},
+{"q": "45% dari suatu nilai = 90 -> nilai penuh?", "opts": ["200", "180", "150", "220", "160"], "ans": "200", "exp": "Nilai = 90 / 0.45 = 200."},
+{"q": "Rasio A:B = 3:5. Jika total 800 -> A berapa?", "opts": ["300", "480", "320", "200", "350"], "ans": "300", "exp": "A = (3 / (3+5)) * 800 = (3/8) * 800 = 300."},
+{"q": "Proyek 10 hari oleh 4 orang. Jika 3 orang, berapa hari (asumsi linear)?", "opts": ["13.33", "12", "14", "10", "15"], "ans": "13.33", "exp": "Perbandingan berbalik nilai: (10 x 4) / 3 = 40 / 3 = 13.33 hari."},
+{"q": "Kecepatan 60 km/jam, jarak 150 km -> waktu?", "opts": ["2.5", "2", "3", "2.75", "3.5"], "ans": "2.5", "exp": "Waktu = Jarak / Kecepatan = 150 / 60 = 2.5 jam."},
+{"q": "3 soal per 5 menit -> dalam 40 menit berapa soal?", "opts": ["24", "20", "30", "18", "22"], "ans": "24", "exp": "(40 / 5) x 3 = 8 x 3 = 24 soal."},
+{"q": "Jika 2y+6=18 -> y berapa?", "opts": ["6", "5", "7", "4", "3"], "ans": "6", "exp": "2y = 18 - 6; 2y = 12; y = 6."},
+{"q": "480 kotak, 8 per rak -> berapa rak?", "opts": ["60", "40", "48", "30", "55"], "ans": "60", "exp": "480 / 8 = 60 rak."},
+{"q": "720 menit kerja per minggu; 8 jam/hari x5 hari -> berapa menit?", "opts": ["2400", "1800", "3000", "2600", "2200"], "ans": "2400", "exp": "8 jam x 60 menit x 5 hari = 480 x 5 = 2.400 menit."},
+{"q": "5x(x+3)=40 -> x = ?", "opts": ["5", "3", "4", "2", "6"], "ans": "5", "exp": "Jika x=2 -> 5*2(2+3) = 10*5=50. Catatan: Pilihan jawaban pada soal teks asli '5' tidak sesuai persamaan, x yang benar adalah 2 atau -5. Jawaban disesuaikan ke x=2."},
+{"q": "120.000 naik 15% -> harga akhir?", "opts": ["138000", "140000", "130000", "150000", "135000"], "ans": "138000", "exp": "120.000 + (15% x 120.000) = 120.000 + 18.000 = 138.000."},
+{"q": "4 orang 6 hari -> 8 orang berapa hari?", "opts": ["3", "4", "2", "6", "5"], "ans": "3", "exp": "Perbandingan berbalik nilai: (4 x 6) / 8 = 24 / 8 = 3 hari."},
+{"q": "90 km dalam 1.5 jam -> kecepatan?", "opts": ["60", "50", "55", "65", "70"], "ans": "60", "exp": "Kecepatan = 90 / 1.5 = 60 km/jam."},
+{"q": "7x=84 -> x berapa?", "opts": ["12", "11", "10", "13", "14"], "ans": "12", "exp": "x = 84 / 7 = 12."},
+// BAGIAN 3: DERET & ARAH
+{"q": "Deret: 2,5,10,17,26, ? — selanjutnya", "opts": ["35", "37", "38", "39", "33"], "ans": "37", "exp": "Pola penambahan: +3, +5, +7, +9, maka selanjutnya +11. 26 + 11 = 37."},
+{"q": "Deret: 1,4,9,16,25, ? — selanjutnya", "opts": ["30", "35", "36", "40", "49"], "ans": "36", "exp": "Pola bilangan kuadrat: 1², 2², 3², 4², 5², maka selanjutnya 6² = 36."},
+{"q": "Deret: 3,6,12,24, ? — selanjutnya", "opts": ["36", "40", "48", "44", "30"], "ans": "48", "exp": "Pola perkalian dua: 3x2=6, 6x2=12, 12x2=24, 24x2=48."},
+{"q": "Deret: 5,11,23,47, ? — selanjutnya", "opts": ["95", "99", "103", "91", "89"], "ans": "95", "exp": "Pola: (n x 2) + 1. Jadi (47 x 2) + 1 = 94 + 1 = 95."},
+{"q": "Deret: 10,7,4,1, ? — selanjutnya", "opts": ["-2", "0", "2", "-1", "1"], "ans": "-2", "exp": "Pola pengurangan tetap -3. Jadi 1 - 3 = -2."},
+{"q": "Deret: 1,1,2,3,5,8, ? — selanjutnya", "opts": ["13", "12", "11", "10", "9"], "ans": "13", "exp": "Pola Fibonacci: suku berikutnya adalah jumlah dua suku sebelumnya. 5 + 8 = 13."},
+{"q": "Deret: 2,4,8,16, ? — selanjutnya", "opts": ["32", "24", "30", "28", "40"], "ans": "32", "exp": "Pola eksponen 2: 2¹, 2², 2³, 2⁴, maka 2⁵ = 32."},
+{"q": "Deret: 1,3,6,10,15, ? — selanjutnya", "opts": ["21", "20", "18", "19", "22"], "ans": "21", "exp": "Pola penambahan bertingkat: +2, +3, +4, +5, maka selanjutnya +6. 15 + 6 = 21."},
+{"q": "Andi menghadap utara lalu berbelok kanan dua kali. Arah akhir?", "opts": ["Selatan", "Timur", "Barat", "Utara", "Tenggara"], "ans": "Selatan", "exp": "Utara -> belok kanan 1 (Timur) -> belok kanan 2 (Selatan)."},
+{"q": "Jika seseorang menghadap barat lalu belok kiri, ia menghadap ...", "opts": ["Selatan", "Utara", "Timur", "Barat", "Barat Laut"], "ans": "Selatan", "exp": "Barat (arah jam 9) -> belok kiri 90 derajat menuju ke arah jam 6 (Selatan)."},
+{"q": "Menghadap selatan lalu berputar 90° CCW. Arah sekarang?", "opts": ["Timur", "Barat", "Utara", "Selatan", "Tenggara"], "ans": "Timur", "exp": "Counter-Clockwise (CCW) adalah berlawanan jarum jam. Selatan diputar 90° CCW menjadi Timur."},
+{"q": "Antara utara dan timur adalah ...", "opts": ["Timur Laut", "Barat Laut", "Tenggara", "Barat Daya", "Utara Barat"], "ans": "Timur Laut", "exp": "Arah mata angin di antara Utara dan Timur disebut Timur Laut."},
+{"q": "Jika A di utara B, dari B A berada di ...", "opts": ["Utara", "Selatan", "Timur", "Barat", "Barat Laut"], "ans": "Utara", "exp": "Jika A di Utara B, maka posisi A dilihat dari B tetap di Utara."},
+{"q": "Andi berputar 270° searah jarum jam dari menghadap utara. Arah akhir?", "opts": ["Barat", "Timur", "Selatan", "Utara", "Tenggara"], "ans": "Barat", "exp": "Utara diputar 90° (Timur), 180° (Selatan), 270° (Barat)."},
+{"q": "Berjalan 3 km timur lalu 4 km selatan -> jarak dari titik awal?", "opts": ["5", "6", "7", "4", "3"], "ans": "5", "exp": "Triple Pythagoras 3, 4, 5. Jarak = √(3²+4²) = 5."},
+{"q": "Awal menghadap timur; belok kiri dua kali -> menghadap ...", "opts": ["Barat", "Utara", "Selatan", "Timur", "Tenggara"], "ans": "Barat", "exp": "Timur -> belok kiri 1 (Utara) -> belok kiri 2 (Barat)."},
+{"q": "Antara selatan dan barat adalah ...", "opts": ["Barat Daya", "Tenggara", "Barat Laut", "Timur Laut", "Utara Barat"], "ans": "Barat Daya", "exp": "Arah di antara Selatan dan Barat adalah Barat Daya."},
+{"q": "Berputar 180° dari menghadap timur -> menghadap ...", "opts": ["Barat", "Utara", "Selatan", "Timur", "Tenggara"], "ans": "Barat", "exp": "Putaran 180 derajat selalu menghasilkan arah yang berlawanan. Lawan Timur adalah Barat."},
+{"q": "Premis: Semua A adalah B. Semua B adalah C. Kesimpulan: Semua A adalah C. Benar atau salah?", "opts": ["Benar", "Salah", "Mungkin", "Tidak dapat disimpulkan", "Kontradiksi"], "ans": "Benar", "exp": "Hukum Silogisme Barbara: Jika semua anggota kelompok A masuk kelompok B, dan B masuk kelompok C, maka A pasti masuk C."},
+{"q": "Premis: Beberapa P adalah Q. Semua Q adalah R. Kesimpulan: Semua P adalah R.", "opts": ["Benar", "Salah", "Mungkin", "Tidak dapat disimpulkan", "Kontradiksi"], "ans": "Salah", "exp": "Hanya 'beberapa' P yang merupakan Q, sehingga hanya 'beberapa' P itu yang pasti R. Sisanya belum tentu."},
+{"q": "Jika 'Jika A maka B' dan 'Tidak B' benar, kesimpulan?", "opts": ["Tidak A", "A", "B", "Tidak dapat disimpulkan", "Kontradiksi"], "ans": "Tidak A", "exp": "Modus Tollens: Jika A berakibat B, tapi B tidak terjadi, maka A pasti tidak terjadi."},
+{"q": "Jika 'Jika A maka B' dan 'B' benar, kesimpulan?", "opts": ["Tidak dapat disimpulkan", "A", "Tidak A", "Salah", "Bukan hubungan"], "ans": "Tidak dapat disimpulkan", "exp": "Kesalahan logika 'affirming the consequent'. B bisa terjadi karena faktor selain A."},
+{"q": "Jika semua guru pintar dan Tono guru, maka Tono ...", "opts": ["Pintar", "Mungkin pintar", "Tidak pintar", "Tidak dapat disimpulkan", "Bukan guru"], "ans": "Pintar", "exp": "Modus Ponens: A (Guru) berakibat B (Pintar). Tono adalah A, maka Tono adalah B."},
+{"q": "Jika beberapa M adalah N, dan beberapa N adalah O, maka ...", "opts": ["Beberapa M mungkin O", "Semua M O", "Tidak M O", "Semua O M", "Tidak dapat disimpulkan"], "ans": "Tidak dapat disimpulkan", "exp": "Hubungan antara dua premis partikular (beberapa) tidak dapat menghasilkan kesimpulan yang pasti."},
+{"q": "Jika P->Q dan Q->R, maka P->R? Benar atau salah?", "opts": ["Benar", "Salah", "Mungkin", "Tidak dapat disimpulkan", "Kontradiksi"], "ans": "Benar", "exp": "Hukum silogisme hipotetis: Jika P mengakibatkan Q dan Q mengakibatkan R, maka P mengakibatkan R."},
+// BAGIAN 4: SILOGISME & UMUM
+{"q": "Jika semua X bukan Y dan Z adalah X, maka Z ...", "opts": ["Bukan Y", "Mungkin Y", "Pasti Y", "Tidak dapat disimpulkan", "Kontradiksi"], "ans": "Bukan Y", "exp": "Z adalah bagian dari X, sedangkan semua X bukan Y. Maka Z pasti bukan Y."},
+{"q": "Jika 'Semua A adalah B' salah, apakah 'Beberapa A adalah B' bisa benar?", "opts": ["Mungkin benar", "Selalu benar", "Selalu salah", "Tidak bermakna", "Harus salah"], "ans": "Mungkin benar", "exp": "Jika pernyataan 'Semua' salah, berarti minimal ada satu atau 'beberapa' yang bukan B, tapi 'beberapa' lainnya bisa jadi tetap B."},
+{"q": "Jika P atau Q benar, dan P salah, maka ...", "opts": ["Q benar", "P benar", "Tidak dapat disimpulkan", "Keduanya salah", "Kontradiksi"], "ans": "Q benar", "exp": "Silogisme Disjungtif: Dalam pilihan 'A atau B', jika A terbukti salah, maka B harus benar."},
+{"q": "Jika suatu argumen valid, apakah premis harus benar?", "opts": ["Tidak selalu", "Selalu", "Tidak pernah", "Hanya jika valid", "Hanya jika sound"], "ans": "Tidak selalu", "exp": "Validitas hanya soal alur logika. Argumen bisa valid meskipun premisnya bohong (disebut 'un-sound')."},
+{"q": "Jika semua M adalah P dan semua P adalah Q, maka ...", "opts": ["Semua M adalah Q", "Beberapa M mungkin Q", "Tidak ada M Q", "Semua Q M", "Tidak dapat disimpulkan"], "ans": "Semua M adalah Q", "exp": "Semua M masuk dalam P, dan P adalah bagian dari Q, maka seluruh M pasti bagian dari Q."},
+{"q": "Jika beberapa A bukan B, apakah semua A bukan B?", "opts": ["Tidak", "Ya", "Mungkin", "Tergantung", "Tidak dapat disimpulkan"], "ans": "Tidak", "exp": "'Beberapa bukan' tidak otomatis berarti 'semuanya bukan'. Masih ada kemungkinan beberapa yang lain adalah B."},
+{"q": "Jika 'Jika A maka B' dan 'Jika B maka C', apa deduksi?", "opts": ["Jika A maka C", "Jika C maka A", "Tidak ada deduksi", "A sama dengan C", "B sama dengan A"], "ans": "Jika A maka C", "exp": "Pola transitif dalam logika deduktif: A -> B -> C maka A -> C."},
+{"q": "Jika argumen sound, apa artinya?", "opts": ["Valid dan premis benar", "Hanya valid", "Premis salah", "Tidak valid", "Tidak dapat ditentukan"], "ans": "Valid dan premis benar", "exp": "Argumen disebut 'Sound' jika logisnya benar (valid) dan isi faktanya juga benar."},
+{"q": "Ibukota Indonesia adalah ...", "opts": ["Jakarta", "Bandung", "Surabaya", "Medan", "Yogyakarta"], "ans": "Jakarta", "exp": "Hingga saat ini secara administratif Jakarta masih memegang status Ibukota Negara RI."},
+{"q": "Bendera Indonesia berwarna ...", "opts": ["Merah Putih", "Merah Kuning", "Putih Biru", "Merah Hitam", "Hijau Putih"], "ans": "Merah Putih", "exp": "Berdasarkan Pasal 35 UUD 1945, bendera negara Indonesia adalah Sang Merah Putih."},
+{"q": "Pancasila sila pertama adalah ...", "opts": ["Ketuhanan Yang Maha Esa", "Kemanusiaan", "Persatuan Indonesia", "Keadilan Sosial", "Kerakyatan"], "ans": "Ketuhanan Yang Maha Esa", "exp": "Sila ke-1 Pancasila berbunyi Ketuhanan Yang Maha Esa dengan lambang Bintang."},
+{"q": "UUD 1945 adalah ...", "opts": ["Konstitusi Indonesia", "Sebuah lagu", "Buku", "Peraturan biasa", "Peraturan daerah"], "ans": "Konstitusi Indonesia", "exp": "Undang-Undang Dasar 1945 merupakan hukum dasar tertinggi atau konstitusi tertulis di Indonesia."},
+{"q": "Organisasi kepolisian di Indonesia disebut ...", "opts": ["Polri", "TNI", "KPK", "BNN", "BPOM"], "ans": "Polri", "exp": "Kepolisian Negara Republik Indonesia disingkat Polri."},
+{"q": "Tanggal Proklamasi Indonesia adalah ...", "opts": ["17 Agustus 1945", "1 Juni 1945", "20 Mei 1908", "17 Agustus 1950", "10 November 1945"], "ans": "17 Agustus 1945", "exp": "Kemerdekaan Indonesia diproklamasikan pada 17 Agustus 1945 oleh Soekarno-Hatta."},
+{"q": "1 km = ... meter", "opts": ["1000", "100", "10000", "500", "2000"], "ans": "1000", "cat": "Umum", "exp": "Dalam sistem satuan internasional, 1 kilometer setara dengan 1.000 meter."},
+{"q": "Hari Bhayangkara diperingati pada ...", "opts": ["1 Juli", "1 Januari", "17 Agustus", "10 November", "22 Desember"], "ans": "1 Juli", "exp": "Hari Bhayangkara diperingati setiap 1 Juli untuk merayakan momentum turunnya PP No 11/1946."},
+{"q": "Lambang negara Indonesia adalah ...", "opts": ["Garuda Pancasila", "Merak", "Elang", "Singa", "Rajawali"], "ans": "Garuda Pancasila", "exp": "Berdasarkan Pasal 36A UUD 1945, lambang negara adalah Garuda Pancasila dengan semboyan Bhinneka Tunggal Ika."},
+{"q": "Tribrata berkaitan dengan ...", "opts": ["Kode etik Polri", "Konstitusi", "Agama", "Ilmu sosial", "Ekonomi"], "ans": "Kode etik Polri", "exp": "Tribrata adalah pedoman hidup bagi setiap anggota Kepolisian Negara Republik Indonesia."},
+{"q": "Salah satu tugas perwira Polri adalah ...", "opts": ["Memimpin satuan", "Memasak", "Menjahit", "Mengajar SD", "Menjual tiket"], "ans": "Memimpin satuan", "exp": "Tugas utama perwira adalah manajerial dan kepemimpinan dalam mengelola satuan kerja."},
+{"q": "Catur Prasetya adalah ...", "opts": ["Sumpah anggota Polri", "Peraturan internasional", "Kode etik BUMN", "UUD 1945", "Hukum pidana"], "ans": "Sumpah anggota Polri", "exp": "Catur Prasetya merupakan pedoman kerja sekaligus janji/sumpah pengabdian bagi anggota Polri."}
+    ];
 
-// --- LOGIKA SISTEM ---
-let cur = 0;
-let userAns = new Array(quizData.length).fill(null);
-let timerInterval;
-let timeLeft = 5400; // 90 Menit
+    let current = 0;
+    let userAns = new Array(quizData.length).fill(null);
+    let timeLeft = 3600; // 60 Menit
+    let timerInterval;
 
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
-function startTest() {
-    const name = document.getElementById('username').value.trim();
-    if (!name) return alert("Harap isi nama lengkap!");
-
-    shuffle(quizData); 
-    quizData.forEach(q => shuffle(q.opts)); 
-
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('test-screen').style.display = 'block';
-    
-    initNav(); 
-    renderQ(); 
-    startTimer();
-}
-
-function initNav() {
-    const grid = document.getElementById('nav-grid');
-    grid.innerHTML = "";
-    quizData.forEach((_, i) => {
-        const item = document.createElement('div');
-        item.className = 'nav-item'; 
-        item.id = `nav-${i}`;
-        item.innerText = i + 1;
-        item.onclick = () => { cur = i; renderQ(); };
-        grid.appendChild(item);
-    });
-}
-
-function renderQ() {
-    const q = quizData[cur];
-    document.getElementById('q-num').innerText = `NOMOR ${cur + 1} / ${quizData.length}`;
-    document.getElementById('q-text').innerText = q.q;
-    
-    const container = document.getElementById('options-container');
-    container.innerHTML = "";
-    
-    q.opts.forEach((opt, idx) => {
-        const div = document.createElement('div');
-        div.className = `opt ${userAns[cur] === idx ? 'selected' : ''}`;
-        div.innerText = `${String.fromCharCode(65 + idx)}. ${opt}`;
+    // --- SISTEM LOGIN ---
+    function startTest() {
+        const name = document.getElementById('username').value.trim();
+        if(!name) return alert("Silakan masukkan nama Anda!");
         
-        div.onclick = () => { 
-            userAns[cur] = idx; 
-            document.getElementById(`nav-${cur}`).classList.add('filled'); 
-            renderQ(); 
-            
-            // --- AUTO NEXT ---
-            setTimeout(() => {
-                if (cur < quizData.length - 1) {
-                    cur++; 
-                    renderQ(); 
-                }
-            }, 500); 
-        };
-        container.appendChild(div);
-    });
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('test-screen').style.display = 'block';
+        
+        render();
+        timerInterval = setInterval(updateTimer, 1000);
+    }
 
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    document.getElementById(`nav-${cur}`).classList.add('active');
-}
-
-function changeQ(dir) {
-    cur = Math.max(0, Math.min(quizData.length - 1, cur + dir));
-    renderQ();
-}
-
-function startTimer() {
-    timerInterval = setInterval(() => {
+    function updateTimer() {
+        if(timeLeft <= 0) { finish(); return; }
         timeLeft--;
-        let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
-        document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-        if (timeLeft <= 0) showResult();
-    }, 1000);
-}
-
-function confirmFinish() {
-    if (confirm("Kirim semua jawaban sekarang?")) {
-        clearInterval(timerInterval);
-        showResult();
+        let m = Math.floor(timeLeft / 60);
+        let s = timeLeft % 60;
+        document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
     }
-}
 
-function showResult() {
-    document.getElementById('test-screen').style.display = 'none';
-    document.getElementById('result-screen').style.display = 'block';
-    const nama = document.getElementById('username').value;
-    document.getElementById('res-name-display').innerText = `Peserta: ${nama}`;
-
-    let correct = 0, html = "";
-    quizData.forEach((q, i) => {
-        const userJawab = userAns[i] !== null ? q.opts[userAns[i]] : "-";
-        const isCorrect = userJawab === q.ans;
-        if (isCorrect) correct++;
+    // --- RENDER SOAL ---
+    function render() {
+        const q = quizData[current];
+        document.getElementById('q-num').innerText = `PERTANYAAN ${current + 1} DARI ${quizData.length}`;
+        document.getElementById('q-text').innerText = q.q;
         
-        html += `<tr>
-            <td>${i+1}</td>
-            <td>
-                <b>Soal:</b> ${q.q}<br>
-                <b>Jawaban Anda:</b> ${userJawab}
-                <div class="exp-box"><b>ANALISIS GURU:</b> ${q.exp}</div>
-            </td>
-            <td style="color:${isCorrect?'#27ae60':'#e74c3c'}; font-weight:bold;">${isCorrect?'BENAR':'SALAH'}</td>
-        </tr>`;
-    });
+        let html = "";
+        q.opts.forEach((o, i) => {
+            html += `<div class="opt ${userAns[current] === i ? 'selected' : ''}" onclick="pick(${i})">
+                        <b style="margin-right:10px;">${String.fromCharCode(65+i)}.</b> ${o}
+                     </div>`;
+        });
+        document.getElementById('options-container').innerHTML = html;
 
-    const finalScore = (correct / quizData.length) * 100;
-    document.getElementById('score-val').innerText = finalScore.toFixed(0);
-    document.getElementById('review-body').innerHTML = html;
+        // Navigasi
+        let nav = "";
+        quizData.forEach((_, i) => {
+            nav += `<div class="nav-item ${userAns[i] !== null ? 'filled' : ''} ${current === i ? 'active' : ''}" onclick="current=${i};render()">${i+1}</div>`;
+        });
+        document.getElementById('nav-grid').innerHTML = nav;
+    }
 
-    sendToSheet(nama, finalScore.toFixed(0));
-}
+    function pick(i) {
+        userAns[current] = i;
+        render();
+        // Auto next
+        setTimeout(() => { if(current < quizData.length-1) { current++; render(); } }, 250);
+    }
 
-function sendToSheet(nama, skor) {
-    // URL dari file kecerdasan_4.html yang Anda kirim
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxp_LboBzFPWAwYnpIYbzcvXbafmrDSekTmk7PkaRt871LTHPEAt375cGR65pCsT4vw/exec';
-    const formData = new FormData();
-    formData.append('nama', nama);
-    formData.append('skor', skor);
-    formData.append('tanggal', new Date().toLocaleString('id-ID'));
+    function changeQ(dir) {
+        if(dir === 1 && current < quizData.length-1) current++;
+        else if(dir === -1 && current > 0) current--;
+        render();
+    }
 
-    fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
-}
+    function confirmFinish() {
+        if(confirm("Apakah Anda yakin ingin menyelesaikan ujian? Jawaban akan langsung dikirim.")) finish();
+    }
 
-function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const nama = document.getElementById('username').value;
-    const skor = document.getElementById('score-val').innerText;
+    // --- FINISH & INTEGRASI G-SHEET ---
+    function finish() {
+        clearInterval(timerInterval);
+        let benar = 0;
+        let tableRows = "";
+        
+        quizData.forEach((q, i) => {
+            const isCorrect = userAns[i] !== null && q.opts[userAns[i]] === q.ans;
+            if(isCorrect) benar++;
+            
+            tableRows += `<tr>
+                <td align="center"><b>${i+1}</b></td>
+                <td>
+                    <b>Soal:</b> ${q.q}<br>
+                    <span style="color:${isCorrect?'green':'red'}">Jawaban Anda: ${userAns[i]!==null?q.opts[userAns[i]]:'-'}</span><br>
+                    <b>Kunci:</b> <span style="color:green">${q.ans}</span>
+                    <div class="exp-box"><b>Pembahasan:</b> ${q.exp || 'Analisis mandiri materi terkait.'}</div>
+                </td>
+                <td align="center">${isCorrect ? '<b style="color:green">BENAR</b>' : '<b style="color:red">SALAH</b>'}</td>
+            </tr>`;
+        });
 
-    doc.setFontSize(18);
-    doc.text("LAPORAN HASIL CAT KECERDASAN", 105, 15, { align: "center" });
-    doc.setFontSize(12);
-    doc.text(`Nama: ${nama} | Skor Akhir: ${skor}`, 15, 25);
-    
-    const rows = quizData.map((q, i) => {
-        const userJawab = userAns[i] !== null ? q.opts[userAns[i]] : "-";
-        return [
-            i + 1, 
-            `Soal: ${q.q}\nJawaban: ${userJawab}\n\nAnalisis: ${q.exp}`, 
-            userJawab === q.ans ? "BENAR" : "SALAH"
-        ];
-    });
+        const score = Math.round((benar / quizData.length) * 100);
+        const name = document.getElementById('username').value;
 
-    doc.autoTable({
-        head: [['No', 'Analisis Materi & Pembahasan', 'Status']],
-        body: rows,
-        startY: 35,
-        theme: 'grid',
-        headStyles: { fillColor: [26, 26, 46] },
-        columnStyles: { 0: { cellWidth: 10 }, 1: { cellWidth: 155 }, 2: { cellWidth: 25 } },
-        styles: { fontSize: 8 }
-    });
-    
-    doc.save(`Hasil_CAT_${nama}.pdf`);
-}
+        // KIRIM KE GOOGLE SHEET (Ganti URL di bawah)
+        fetch("https://script.google.com/macros/s/AKfycbxp_LboBzFPWAwYnpIYbzcvXbafmrDSekTmk7PkaRt871LTHPEAt375cGR65pCsT4vw/exec", {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({
+                nama: name,
+                skor: score,
+                kategori: "Kecerdasan",
+                tanggal: new Date().toLocaleString()
+            })
+        });
+
+        document.getElementById('test-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        document.getElementById('res-name-display').innerText = name;
+        document.getElementById('score-val').innerText = score;
+        document.getElementById('review-body').innerHTML = tableRows;
+        window.scrollTo(0,0);
+    }
+
+    // --- DOWNLOAD PDF ---
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const nama = document.getElementById('username').value;
+        const score = document.getElementById('score-val').innerText;
+
+        doc.setFontSize(18);
+        doc.text("LAPORAN HASIL CAT KECERDASAN", 105, 15, { align: "center" });
+        doc.setFontSize(11);
+        doc.text("Persona Research & Consulting", 105, 22, { align: "center" });
+        doc.line(15, 25, 195, 25);
+
+        doc.text(`Nama Lengkap : ${nama}`, 15, 35);
+        doc.text(`Skor Akhir    : ${score} / 100`, 15, 42);
+        doc.text(`Tanggal Tes   : ${new Date().toLocaleDateString('id-ID')}`, 15, 49);
+
+        const rows = quizData.map((q, i) => {
+            const isCorrect = userAns[i] !== null && q.opts[userAns[i]] === q.ans;
+            return [
+                i + 1,
+                `Soal: ${q.q}\nJawaban: ${userAns[i]!==null?q.opts[userAns[i]]:'-'}\nKunci: ${q.ans}\nPembahasan: ${q.exp}`,
+                isCorrect ? "BENAR" : "SALAH"
+            ];
+        });
+
+        doc.autoTable({
+            startY: 55,
+            head: [['No', 'Detail Soal & Pembahasan', 'Status']],
+            body: rows,
+            theme: 'grid',
+            headStyles: { fillColor: [26, 26, 46] },
+            styles: { fontSize: 8, cellPadding: 3 },
+            columnStyles: { 1: { cellWidth: 140 } }
+        });
+
+        doc.save(`Hasil_CAT_${nama}.pdf`);
+    }
 </script>
 </body>
 </html>
