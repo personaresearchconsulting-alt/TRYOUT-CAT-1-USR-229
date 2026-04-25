@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERSONA RESEARCH & CONSULTING - HUB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --navy: #0b2340; --gold: #d4a017; }
+        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        #main-content { display: none; } 
+        .card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
+    </style>
+</head>
+<body>
+
+<div id="login-overlay" class="fixed inset-0 bg-navy z-[9999] flex items-center justify-center p-4" style="background-color: #0b2340;">
+    <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full">
+        <div class="text-center mb-6">
+            <i class="fas fa-lock text-4xl text-gold mb-4" style="color: #d4a017;"></i>
+            <h2 class="text-2xl font-bold text-gray-800">Akses Terbatas</h2>
+            <p class="text-sm text-gray-500 italic">Masukkan password untuk verifikasi</p>
+        </div>
+        <input type="password" id="password" class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-gold" placeholder="Password">
+        <button onclick="checkPass()" class="w-full bg-navy text-white p-3 rounded-lg font-bold hover:opacity-90 transition" style="background-color: #0b2340;">LOGIN</button>
+        <p id="error-msg" class="text-red-500 text-center mt-4 hidden text-sm font-bold"></p>
+    </div>
+</div>
+
+<div id="main-content" class="min-h-screen pb-12">
+    <header class="bg-navy text-white py-12 px-4 text-center shadow-lg" style="background-color: #0b2340;">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-2 tracking-tight">PERSONA RESEARCH & CONSULTING</h1>
+        <div class="h-1 w-24 bg-gold mx-auto mb-4" style="background-color: #d4a017;"></div>
+        <p class="text-gold font-medium uppercase tracking-widest text-sm" style="color: #d4a017;">Portal Simulasi Psikologi & Akademik</p>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-4 -mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <a href="huruf_adv_8.html" class="card bg-white p-6 rounded-2xl shadow-sm border-t-4 border-gold block">
+                <div class="flex items-center mb-4">
+                    <div class="p-3 bg-slate-100 rounded-lg text-navy mr-4"><i class="fas fa-bolt text-2xl"></i></div>
+                    <h3 class="font-bold text-gray-800">Tes Kecermatan</h3>
+                </div>
+                <p class="text-sm text-gray-600">Simulasi tes kecermatan huruf dan angka untuk melatih ketelitian serta stamina.</p>
+            </a>
+
+            <a href="kecerdasan_4.html" class="card bg-white p-6 rounded-2xl shadow-sm border-t-4 border-gold block">
+                <div class="flex items-center mb-4">
+                    <div class="p-3 bg-slate-100 rounded-lg text-navy mr-4"><i class="fas fa-brain text-2xl"></i></div>
+                    <h3 class="font-bold text-gray-800">CAT Kecerdasan</h3>
+                </div>
+                <p class="text-sm text-gray-600">Evaluasi kecerdasan tingkat tinggi (HOTS) dengan format CAT terbaru.</p>
+            </a>
+
+            <a href="passhand_a4.html" class="card bg-white p-6 rounded-2xl shadow-sm border-t-4 border-gold block">
+                <div class="flex items-center mb-4">
+                    <div class="p-3 bg-slate-100 rounded-lg text-navy mr-4"><i class="fas fa-id-card text-2xl"></i></div>
+                    <h3 class="font-bold text-gray-800">Pass Hand 4</h3>
+                </div>
+                <p class="text-sm text-gray-600">Penilaian psikologis spesifik menggunakan instrumen Pass Hand 4.</p>
+            </a>
+
+            <a href="teskepribadian_sssts2.html" class="card bg-white p-6 rounded-2xl shadow-sm border-t-4 border-gold block">
+                <div class="flex items-center mb-4">
+                    <div class="p-3 bg-slate-100 rounded-lg text-navy mr-4"><i class="fas fa-users text-2xl"></i></div>
+                    <h3 class="font-bold text-gray-800">Asesmen Likert</h3>
+                </div>
+                <p class="text-sm text-gray-600">Tes kepribadian mendalam menggunakan skala Likert untuk profil psikologis.</p>
+            </a>
+
+            <a href="tkp6.html" class="card bg-white p-6 rounded-2xl shadow-sm border-t-4 border-gold block">
+                <div class="flex items-center mb-4">
+                    <div class="p-3 bg-slate-100 rounded-lg text-navy mr-4"><i class="fas fa-tasks text-2xl"></i></div>
+                    <h3 class="font-bold text-gray-800">CAT TKP 50</h3>
+                </div>
+                <p class="text-sm text-gray-600">Simulasi Tes Karakteristik Pribadi (TKP) dengan 50 soal full.</p>
+            </a>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const P = "yours23"; // Password baru
+    const LIMIT = 7 * 24 * 60 * 60 * 1000; // 7 Hari (dalam milidetik)
+
+    function checkPass() {
+        const input = document.getElementById('password').value;
+        const msg = document.getElementById('error-msg');
+        const now = new Date().getTime();
+
+        if (input === P) {
+            let start = localStorage.getItem('_ts_persona');
+            
+            if (!start) {
+                // Set waktu pertama kali login
+                localStorage.setItem('_ts_persona', now);
+                showContent();
+            } else {
+                // Cek apakah sudah expired
+                if (now - start > LIMIT) {
+                    msg.innerText = "Akses kedaluwarsa (Masa aktif 7 hari habis).";
+                    msg.classList.remove('hidden');
+                } else {
+                    showContent();
+                }
+            }
+        } else {
+            msg.innerText = "Password Salah!";
+            msg.classList.remove('hidden');
+        }
+    }
+
+    function showContent() {
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+    }
+
+    // Reset saat refresh
+    window.addEventListener('load', () => {
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('login-overlay').style.display = 'flex';
+        document.getElementById('password').value = "";
+    });
+</script>
+</body>
+</html>
